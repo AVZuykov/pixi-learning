@@ -12,6 +12,7 @@ export default class Megaman extends PIXI.Container {
     this.vx = 0
     this.vy = 0
     this.speed = 5
+    this.firespeed = 300
     this.animationSpeed = 0.12
     this.lastFrame = 0
     this.direction = 1
@@ -69,7 +70,9 @@ export default class Megaman extends PIXI.Container {
         space = keyboard([ ' ' ])
 
     space.press = () => {
-      app.stage.addChild(new Fireball(this.x + this.width, this.y, this.width / Math.abs(this.width)))
+      this.fire()
+      this.fireInterval = setInterval(()=> this.fire(), this.firespeed)
+
 
       if ( this.vx === 0 && this.vy === 0 ) {
         this.stayAndFire()
@@ -79,6 +82,7 @@ export default class Megaman extends PIXI.Container {
     }
 
     space.release = () => {
+      clearInterval(this.fireInterval)
       if ( this.vx !== 0 || this.vy !== 0 ) {
         this.run()
       } else {
@@ -141,6 +145,10 @@ export default class Megaman extends PIXI.Container {
     } else {
       space ? this.stayAndFire() : this.stay()
     }
+  }
+
+  fire() {
+    app.stage.addChild(new Fireball(this.x + this.width, this.y, this.width / Math.abs(this.width)))
   }
 
   runAndFire() {
