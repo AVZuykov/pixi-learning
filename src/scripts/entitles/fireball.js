@@ -1,7 +1,8 @@
-import * as PIXI from 'pixi.js'
-import app from '../app'
+import { app, Container, Sprite } from '../app'
 
-export class Fireball extends PIXI.Container {
+const { visual } = app
+
+export class Fireball extends Container {
   constructor(x, y, direction, vx, vy) {
     super()
     this.speed = 10
@@ -11,14 +12,14 @@ export class Fireball extends PIXI.Container {
     this.vy = vy
     this.direction = direction
 
-    this.fireball = new PIXI.Sprite(app.visual.fireball[0].texture)
+    this.fireball = new Sprite(visual.fireball[0].texture)
 
     this.addChild(this.fireball)
 
     app.ticker.add((delta) => {
       //Use the megaman's velocity to make it move
       if ( this.x > app.screen.width || this.x < 0 ) {
-        app.stage.removeChild(this)
+        app.destroy(this)
       }
       this.update(delta)
     })

@@ -1,14 +1,12 @@
-import * as PIXI from 'pixi.js'
-import app from '../app.js'
-
+import { AnimatedSprite, app, Container, Sprite } from '../app.js'
 import { Fireball } from './fireball'
-
 import { keyboard } from '../utils/controls.js'
 
-export default class Megaman extends PIXI.Container {
+const { visual } = app
+
+export default class Megaman extends Container {
   constructor() {
     super()
-
     this.vx = 0
     this.vy = 0
     this.speed = 5
@@ -18,13 +16,13 @@ export default class Megaman extends PIXI.Container {
     this.direction = 1
 
     //Стой и моргай
-    this.stayedSprite = new PIXI.AnimatedSprite([
+    this.stayedSprite = new AnimatedSprite([
       {
-        texture: app.visual.stay[0].texture,
+        texture: visual.stay[0].texture,
         time: 2000,
       },
       {
-        texture: app.visual.stay[1].texture,
+        texture: visual.stay[1].texture,
         time: 150,
       },
     ])
@@ -32,19 +30,19 @@ export default class Megaman extends PIXI.Container {
     // this.stayedSprite.visible = false;
 
     //Стой и стреляй
-    this.stayAndFireSprite = new PIXI.Sprite(app.visual.stayAndFire[0].texture)
+    this.stayAndFireSprite = new Sprite(visual.stayAndFire[0].texture)
 
     this.stayAndFireSprite.visible = false
 
     //Беги
-    this.runningSprite = new PIXI.AnimatedSprite(
-        app.visual.run.map((img) => img.texture),
+    this.runningSprite = new AnimatedSprite(
+        visual.run.map((img) => img.texture),
     )
     this.runningSprite.visible = false
 
     //Беги и стреляй
-    this.runAndFireSprite = new PIXI.AnimatedSprite(
-        app.visual.runAndFire.map((img) => img.texture),
+    this.runAndFireSprite = new AnimatedSprite(
+        visual.runAndFire.map((img) => img.texture),
     )
     // this.runAndFireSprite.play();
     this.runAndFireSprite.visible = false
