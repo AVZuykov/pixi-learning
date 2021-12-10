@@ -2,11 +2,13 @@ import * as PIXI from 'pixi.js'
 import app from '../app'
 
 export class Fireball extends PIXI.Container {
-  constructor(x, y, direction) {
+  constructor(x, y, direction, vx, vy) {
     super()
     this.speed = 10
     this.x = x
     this.y = y
+    this.vx = vx
+    this.vy = vy
     this.direction = direction
 
     this.fireball = new PIXI.Sprite(app.visual.fireball[0].texture)
@@ -24,6 +26,7 @@ export class Fireball extends PIXI.Container {
 
   update() {
     //Use the megaman's velocity to make it move
-    this.x += this.speed * this.direction
+    this.x += this.speed * this.direction + this.vx
+    this.y += this.vy
   }
 }
