@@ -1,6 +1,8 @@
-import { AnimatedSprite, app, Container, Sprite } from '../app.js'
-import { Fireball } from './fireball'
-import { keyboard } from '../utils/controls.js'
+import { AnimatedSprite, Container, Sprite } from '../utils/pixi'
+import { app } from '../app.js'
+import { Fireball } from './Fireball'
+import { BFG } from './BFG'
+import { Keyboard } from '../utils/controls.js'
 
 const { visual } = app
 
@@ -13,6 +15,7 @@ export default class Megaman extends Container {
     this.firespeed = 300
     this.animationSpeed = 0.12
     this.lastFrame = 0
+    this.charge = undefined
     this.direction = 1
 
     //Стой и моргай
@@ -50,6 +53,8 @@ export default class Megaman extends Container {
     this.runningSprite.animationSpeed = this.animationSpeed
     this.runAndFireSprite.animationSpeed = this.animationSpeed
 
+    this.centered([this.runAndFireSprite, this.runningSprite, this.stayAndFireSprite, this.stayedSprite])
+
     this.addChild(this.stayedSprite)
     this.addChild(this.stayAndFireSprite)
     this.addChild(this.runningSprite)
@@ -61,11 +66,13 @@ export default class Megaman extends Container {
     })
 
     //Capture the keyboard arrow keys
-    const left = keyboard([ 'ArrowLeft', 'a' ]),
-        up = keyboard([ 'ArrowUp', 'w' ]),
-        right = keyboard([ 'ArrowRight', 'd' ]),
-        down = keyboard([ 'ArrowDown', 's' ]),
-        space = keyboard([ ' ' ])
+    const left = new Keyboard([ 'Ф', 'A', 'ф', 'a', 'ArrowLeft' ]),
+        up = new Keyboard([ 'Ц', 'W', 'ц', 'w', 'ArrowUp' ]),
+        right = new Keyboard([ 'В', 'D', 'в', 'd', 'ArrowRight' ]),
+        down = new Keyboard([ 'Ы', 'S', 'ы', 's', 'ArrowDown' ]),
+        space = new Keyboard([ ' ' ]),
+        shift = new Keyboard([ 'Shift' ], true),
+        shiftBlock = [ left, up, right, down, space ]
 
     space.press = () => {
       this.fire()
@@ -87,6 +94,21 @@ export default class Megaman extends Container {
         this.stay()
       }
     }
+
+    shift.press = () => {
+      shiftBlock.forEach(button => {
+        button.disable()
+      })
+      clearInterval(this.fireInterval)
+      this.stayAndFire()
+      this.charge = this.crhargeFire()
+    }
+
+    shift.release = () => {
+      this.cancelCharge(this.charge)
+      this.stay()
+    }
+
 
     //Left arrow key `press` method
     left.press = () => {
@@ -138,18 +160,35 @@ export default class Megaman extends Container {
     if ( this.vy !== 0 || this.vx !== 0 ) {
       //Направление движения
       if ( this.vx !== 0 ) {
-        this.vx > 0 ? ( this.scale.x = 1 ) : ( this.scale.x = -1 )
+        this.scale.x = this.direction
       }
       //И стреляет?
       space ? this.runAndFire() : this.run()
     } else {
       space ? this.stayAndFire() : this.stay()
     }
+    this.cancelCharge(this.charge)
+  }
+
+  centered(sprites) {
+    sprites.forEach(sprite => {
+      sprite.anchor.set(.5, .5)
+    })
   }
 
   fire() {
-    const direction = this.width / Math.abs(this.width)
-    app.stage.addChild(new Fireball(this.x + direction * 88, this.y, direction, this.vx, this.vy))
+    this.cancelCharge(this.charge)
+    app.stage.addChild(new Fireball(this.x + this.direction * 88, this.y, this.direction, this.vx, this.vy))
+  }
+
+  crhargeFire() {
+    const ChargedShoot = new BFG(this.x + this.direction * 88, this.y, this.direction)
+    app.stage.addChild(ChargedShoot)
+    return ChargedShoot
+  }
+
+  cancelCharge(charge) {
+    app.stage.removeChild(charge)
   }
 
   runAndFire() {

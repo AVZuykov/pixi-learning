@@ -1,48 +1,55 @@
-export function keyboard(values) {
-  const key = {}
+export class Keyboard {
+  constructor(values, once = false) {
+    this.values = values
+    this.isDown = false
+    this.isUp = true
+    this.cancel = false
+    this.once = once
+    this.press = undefined
+    this.release = undefined
+    this.downListener = this.downHandler.bind(this)
+    this.upListener = this.upHandler.bind(this)
+    values.forEach(() => {
+      window.addEventListener('keydown', this.downListener, false)
+      window.addEventListener('keyup', this.upListener, false)
+    })
+  }
 
-  key.values = values
-  key.isDown = false
-  key.isUp = true
-  key.press = undefined
-  key.release = undefined
-  values.forEach(() => {
-    //The `downHandler`
-    key.downHandler = event => {
-      if ( key.values.some(value => value === event.key) ) {
-        if ( key.isUp && key.press ) {
-          key.press()
-        }
-        key.isDown = true
-        key.isUp = false
-        event.preventDefault()
+  downHandler(event) {
+    if ( this.values.some(value => value === event.key) ) {
+      if ( this.isUp && this.press ) {
+        this.press()
       }
+      this.isDisable = false
+      this.isDown = true
+      this.isUp = false
+      event.preventDefault()
     }
+  }
 
-    //The `upHandler`
-    key.upHandler = event => {
-      if ( key.values.some(value => value === event.key) ) {
-        if ( key.isDown && key.release ) {
-          key.release()
-        }
-        key.isDown = false
-        key.isUp = true
-        event.preventDefault()
+  upHandler(event) {
+    if ( this.values.some(value => value === event.key) ) {
+      if ( this.isDown && this.release ) {
+        this.release()
       }
+      this.isDown = false
+      this.isUp = true
+      event.preventDefault()
     }
+  }
 
-    //Attach event listeners
-    const downListener = key.downHandler.bind(key)
-    const upListener = key.upHandler.bind(key)
-
-    window.addEventListener('keydown', downListener, false)
-    window.addEventListener('keyup', upListener, false)
-
-    // Detach event listeners
-    key.unsubscribe = () => {
-      window.removeEventListener('keydown', downListener)
-      window.removeEventListener('keyup', upListener)
+  disable() {
+    if ( this.isDown && this.release ) {
+      this.release()
+      this.isDown = false
+      this.isUp = true
     }
-  })
-  return key
+  }
+
+  unsubscribe() {
+    window.removeEventListener('keydown', this.downListener)
+    window.removeEventListener('keyup', this.upListener)
+  }
 }
+
+// window.addEventListener('keydown', event => console.log(event.key))

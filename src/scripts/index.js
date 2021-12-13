@@ -1,4 +1,5 @@
 import '../styles/index.scss'
+import './utils/pixi'
 import './app'
 import './resources'
 import './visual'

@@ -1,4 +1,5 @@
-import { app, Container, Sprite } from '../app'
+import { app } from '../app'
+import { Container, Sprite } from '../utils/pixi'
 
 const { visual } = app
 
@@ -6,8 +7,8 @@ export class Fireball extends Container {
   constructor(x, y, direction, vx, vy) {
     super()
     this.speed = 10
-    this.x = x
-    this.y = y
+    this.x = x - 20
+    this.y = y - 20
     this.vx = vx
     this.vy = vy
     this.direction = direction

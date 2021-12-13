@@ -1,4 +1,5 @@
-import { app, Loader } from './app.js'
+import { app } from './app.js'
+import { Loader } from './utils/pixi'
 
 app.loader = new Loader()
 app.loader.add('src/res/megaman-atlas.json')

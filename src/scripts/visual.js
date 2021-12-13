@@ -55,10 +55,16 @@ class VisualModels {
       ],
       fireball: [
         {
-          texture: sprites['fireball.png'],
+          texture: sprites['fireball_1.png'],
+        },
+      ],
+      enemy: [
+        {
+          texture: sprites['enemy.png'],
         },
       ],
     })
   }
 }
+
 app.visual = new VisualModels()

@@ -1,9 +1,8 @@
-import * as PIXI from 'pixi.js'
 
-
-export const { Container, Sprite, Renderer, Ticker, UPDATE_PRIORITY, AnimatedSprite, Loader } = PIXI
 
 //Create a Pixi Application
+import { Container, Renderer, Ticker, UPDATE_PRIORITY } from './utils/pixi'
+
 class Application {
   constructor() {
     this.renderer = new Renderer({
