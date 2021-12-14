@@ -30,6 +30,8 @@ export default class Megaman extends Container {
       },
     ])
 
+    this.stayedSprite.play()
+
     // this.stayedSprite.visible = false;
 
     //Стой и стреляй
