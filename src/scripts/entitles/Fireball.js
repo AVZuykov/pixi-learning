@@ -27,7 +27,6 @@ export class Fireball extends Container {
   }
 
   update() {
-    //Use the megaman's velocity to make it move
     this.x += this.speed * this.direction + this.vx
     this.y += this.vy
   }
